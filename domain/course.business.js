@@ -18,6 +18,27 @@ class CourseBusiness extends BaseBusiness {
     if (!course) return null;
     return mapper(Course, course);
   }
+
+  async getAllByCategory(categoryId) {
+    const course = await this._entityRepository.getAllByCategory(categoryId);
+    if (!course) return null;
+    return mapper(Course, course);
+  }
+
+  async getAllByKeyWord(keyWord) {
+    const course = await this._entityRepository.getAllByKeyWord(keyWord);
+    if (!course) return null;
+    return mapper(Course, course);
+  }
+
+  async getAllByKeyWordAndCategory(categoryId, keyWord) {
+    const course = await this._entityRepository.getAllByKeyWordAndCategory(
+      categoryId,
+      keyWord
+    );
+    if (!course) return null;
+    return mapper(Course, course);
+  }
 }
 
 module.exports = CourseBusiness;

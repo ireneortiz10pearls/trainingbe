@@ -9,6 +9,7 @@ class CourseChapterController {
 
   async getCourseChapters(req, res) {
     let courseChapters = await this._courseChapterService.getAll();
+
     courseChapters = courseChapters.map((courseChapter) =>
       mapper(CourseChapterDto, courseChapter)
     );
@@ -34,6 +35,9 @@ class CourseChapterController {
     let courseChapters = await this._courseChapterService.getChaptersByCourseId(
       id
     );
+
+    courseChapters.sort((a, b) => (a.order > b.order ? 1 : -1));
+
     courseChapters = courseChapters.map((courseChapter) =>
       mapper(CourseChapterDto, courseChapter)
     );

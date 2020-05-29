@@ -13,6 +13,7 @@ const CourseChapterRoutes = require('../api/routes/coursechapter.routes');
 const AuthRoutes = require('../api/routes/auth.routes');
 const CategoryRoutes = require('../api/routes/category.routes');
 const SettingRoutes = require('../api/routes/setting.routes');
+const TrainingPathRoutes = require('../api/routes/trainingpath.routes');
 
 // business
 const {
@@ -34,6 +35,7 @@ const {
   AuthController,
   CategoryController,
   SettingController,
+  TrainingPathController,
 } = require('../api/controllers');
 
 // services
@@ -83,6 +85,8 @@ container
     CategoryRoutes: asFunction(CategoryRoutes).singleton(),
     SettingController: asClass(SettingController).singleton(),
     SettingRoutes: asFunction(SettingRoutes).singleton(),
+    TrainingPathController: asClass(TrainingPathController).singleton(),
+    TrainingPathRoutes: asFunction(TrainingPathRoutes).singleton(),
   })
   .register({
     config: asValue(config),

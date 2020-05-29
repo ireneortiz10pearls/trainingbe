@@ -3,6 +3,7 @@ const userValidationRules = () => {
   return [
     body('firstName').not().isEmpty(),
     body('lastName').not().isEmpty(),
+    body('roleId').not().isEmpty(),
     // username must be an email
     body('email').isEmail(),
     // password must be at least 5 chars long
@@ -16,7 +17,9 @@ const validate = (req, res, next) => {
     return next();
   }
   const extractedErrors = [];
-  errors.array().map((err) => extractedErrors.push({ [err.param]: err.msg }));
+  errors
+    .array()
+    .map((err) => extractedErrors.push({ msg: `${err.msg}: ${err.param}` }));
 
   return res.status(422).json({
     errors: extractedErrors,

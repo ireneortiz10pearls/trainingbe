@@ -10,6 +10,7 @@ module.exports = function ({
   CategoryRoutes,
   SettingRoutes,
   CourseChapterRoutes,
+  TrainingPathRoutes,
 }) {
   const router = Router();
   const apiRoute = Router();
@@ -22,6 +23,7 @@ module.exports = function ({
   apiRoute.use('/auth', AuthRoutes);
   apiRoute.use('/category', CategoryRoutes);
   apiRoute.use('/setting', SettingRoutes);
+  apiRoute.use('/trainingpath', TrainingPathRoutes);
   router.use('/api', apiRoute);
 
   return router;

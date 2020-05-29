@@ -1,5 +1,6 @@
 const BaseRepository = require('./base.repository');
 var models = require('../models');
+const { Op } = require('sequelize');
 
 class CourseRepository extends BaseRepository {
   constructor({ db }) {
@@ -20,9 +21,76 @@ class CourseRepository extends BaseRepository {
   getAllWithCategory() {
     return this._db[this.entity].findAll({
       where: { isActive: true },
+      order: [['id', 'ASC']],
       include: [
         {
           model: models.Category,
+        },
+      ],
+    });
+  }
+
+  getAllByCategory(categoryId) {
+    return this._db[this.entity].findAll({
+      where: { isActive: true },
+      order: [['id', 'ASC']],
+      include: [
+        {
+          model: models.Category,
+          where: { id: categoryId },
+        },
+      ],
+    });
+  }
+
+  getAllByKeyWord(keyWord) {
+    return this._db[this.entity].findAll({
+      where: {
+        isActive: true,
+        [Op.or]: [
+          {
+            title: {
+              [Op.iLike]: `%${keyWord}%`,
+            },
+          },
+          {
+            tags: {
+              [Op.iLike]: `%${keyWord}%`,
+            },
+          },
+        ],
+      },
+      order: [['id', 'ASC']],
+      include: [
+        {
+          model: models.Category,
+        },
+      ],
+    });
+  }
+
+  getAllByKeyWordAndCategory(categoryId, keyWord) {
+    return this._db[this.entity].findAll({
+      where: {
+        isActive: true,
+        [Op.or]: [
+          {
+            title: {
+              [Op.iLike]: `%${keyWord}%`,
+            },
+          },
+          {
+            tags: {
+              [Op.iLike]: `%${keyWord}%`,
+            },
+          },
+        ],
+      },
+      order: [['id', 'ASC']],
+      include: [
+        {
+          model: models.Category,
+          where: { id: categoryId },
         },
       ],
     });

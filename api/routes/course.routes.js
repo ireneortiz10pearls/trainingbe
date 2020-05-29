@@ -10,6 +10,21 @@ module.exports = function ({ CourseController }) {
 
   router.get('/', auth, CourseController.getCourses.bind(CourseController));
   router.get('/:id', auth, CourseController.getCourse.bind(CourseController));
+  router.get(
+    '/category/:categoryid',
+    auth,
+    CourseController.getAllByCategory.bind(CourseController)
+  );
+  router.get(
+    '/keyword/:keyword',
+    auth,
+    CourseController.getAllByKeyWord.bind(CourseController)
+  );
+  router.get(
+    '/keywordcategory/:categoryid/:keyword',
+    auth,
+    CourseController.getAllByKeyWordAndCategory.bind(CourseController)
+  );
   router.post(
     '/',
     [auth, [courseValidationRules(), validate]],

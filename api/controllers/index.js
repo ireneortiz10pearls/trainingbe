@@ -5,4 +5,5 @@ module.exports = {
   CategoryController: require('./category.controller'),
   SettingController: require('./setting.controller'),
   CourseChapterController: require('./coursechapter.controller'),
+  TrainingPathController: require('./trainingpath.controller'),
 };

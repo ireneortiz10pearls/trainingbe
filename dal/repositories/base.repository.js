@@ -6,12 +6,16 @@ class BaseRepository {
   }
 
   getAll() {
-    return this._db[this.entity].findAll({ where: { isActive: true } });
+    return this._db[this.entity].findAll({
+      where: { isActive: true },
+      order: [['id', 'ASC']],
+    });
   }
 
   getAllWithSetting() {
     return this._db[this.entity].findAll({
       where: { isActive: true },
+      order: [['id', 'ASC']],
       include: [
         {
           model: models.Setting,

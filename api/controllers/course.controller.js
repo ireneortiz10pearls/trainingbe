@@ -26,6 +26,45 @@ class CourseController {
     });
   }
 
+  async getAllByCategory(req, res) {
+    const { categoryid } = req.params;
+    let course = await this._courseService.getAllByCategory(categoryid);
+    if (!course) {
+      return res.status(404).send();
+    }
+    course = mapper(CourseDto, course);
+    return res.send({
+      payload: course,
+    });
+  }
+
+  async getAllByKeyWord(req, res) {
+    const { keyword } = req.params;
+    let course = await this._courseService.getAllByKeyWord(keyword);
+    if (!course) {
+      return res.status(404).send();
+    }
+    course = mapper(CourseDto, course);
+    return res.send({
+      payload: course,
+    });
+  }
+
+  async getAllByKeyWordAndCategory(req, res) {
+    const { categoryid, keyword } = req.params;
+    let course = await this._courseService.getAllByKeyWordAndCategory(
+      categoryid,
+      keyword
+    );
+    if (!course) {
+      return res.status(404).send();
+    }
+    course = mapper(CourseDto, course);
+    return res.send({
+      payload: course,
+    });
+  }
+
   async createCourse(req, res) {
     const { body } = req;
     const createdCourse = await this._courseService.create(body);
