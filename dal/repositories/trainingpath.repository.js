@@ -1,4 +1,5 @@
 const BaseRepository = require('./base.repository');
+var models = require('../models');
 
 class TrainingPathRepository extends BaseRepository {
   constructor({ db }) {
@@ -11,7 +12,7 @@ class TrainingPathRepository extends BaseRepository {
       order: [['id', 'ASC']],
       include: [
         {
-          model: models.Category,
+          model: models.Course,
         },
       ],
     });

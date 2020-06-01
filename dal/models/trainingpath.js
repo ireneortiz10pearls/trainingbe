@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   TrainingPath.associate = function (models) {
+    TrainingPath.belongsTo(models.Course, {
+      foreignKey: {
+        name: 'courseId',
+      },
+    });
     TrainingPath.hasMany(models.TrainingPathStatus, {
       foreignKey: 'trainingPathId',
       as: 'TrainingPathStatuses',

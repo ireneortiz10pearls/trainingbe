@@ -11,6 +11,10 @@ module.exports = function ({ TrainingPathController }) {
     '/:id',
     TrainingPathController.getTrainingPath.bind(TrainingPathController)
   );
+  router.get(
+    '/user/:userId',
+    TrainingPathController.getUserCourses.bind(TrainingPathController)
+  );
 
   return router;
 };

@@ -3,6 +3,7 @@ class TrainingPathDto {
   userId = 0;
   courseId = 0;
   isActive = false;
+  Course = {};
 }
 
 module.exports = TrainingPathDto;

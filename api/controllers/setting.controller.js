@@ -25,7 +25,7 @@ class SettingController {
 
   async getSetting(req, res) {
     const { id } = req.params;
-    let setting = await this._settingService.getWithSetting(id);
+    let setting = await this._settingService.get(id);
     if (!setting) {
       return res.status(404).send();
     }

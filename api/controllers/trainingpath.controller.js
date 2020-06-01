@@ -7,7 +7,7 @@ class TrainingPathController {
   }
 
   async getTrainingPaths(req, res) {
-    let trainingpaths = await this._trainingpathService.getAllWithCategory();
+    let trainingpaths = await this._trainingpathService.getAllWithCourse();
     trainingpaths = trainingpaths.map((trainingpath) =>
       mapper(TrainingPathDto, trainingpath)
     );
@@ -18,7 +18,19 @@ class TrainingPathController {
 
   async getTrainingPath(req, res) {
     const { id } = req.params;
-    let trainingpath = await this._trainingpathService.getWithCategory(id);
+    let trainingpath = await this._trainingpathService.getWithCourse(id);
+    if (!trainingpath) {
+      return res.status(404).send();
+    }
+    trainingpath = mapper(TrainingPathDto, trainingpath);
+    return res.send({
+      payload: trainingpath,
+    });
+  }
+
+  async getUserCourses(req, res) {
+    const { userId } = req.params;
+    let trainingpath = await this._trainingpathService.getUserCourses(userId);
     if (!trainingpath) {
       return res.status(404).send();
     }
