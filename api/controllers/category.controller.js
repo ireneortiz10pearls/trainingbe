@@ -8,23 +8,33 @@ class CategoryController {
   }
 
   async getCategories(req, res) {
-    let categories = await this._categoryService.getAllWithSetting();
-    categories = categories.map((category) => mapper(CategoryDto, category));
-    return res.send({
-      payload: categories,
-    });
+    try {
+      let categories = await this._categoryService.getAllWithSetting();
+      categories = categories.map((category) => mapper(CategoryDto, category));
+      return res.send({
+        payload: categories,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async getCategory(req, res) {
-    const { id } = req.params;
-    let category = await this._categoryService.getWithSetting(id);
-    if (!category) {
-      return res.status(404).send();
+    try {
+      const { id } = req.params;
+      let category = await this._categoryService.getWithSetting(id);
+      if (!category) {
+        return res.status(404).send();
+      }
+      category = mapper(CategoryDto, category);
+      return res.send({
+        payload: category,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
     }
-    category = mapper(CategoryDto, category);
-    return res.send({
-      payload: category,
-    });
   }
 
   async createCategory(req, res) {
@@ -52,18 +62,28 @@ class CategoryController {
   }
 
   async updateCategory(req, res) {
-    const { body } = req;
-    const { id } = req.params;
+    try {
+      const { body } = req;
+      const { id } = req.params;
 
-    await this._categoryService.update(id, body);
-    return res.status(204).send();
+      await this._categoryService.update(id, body);
+      return res.status(204).send();
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async deleteCategory(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    await this._categoryService.delete(id);
-    return res.status(204).send();
+      await this._categoryService.delete(id);
+      return res.status(204).send();
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 }
 

@@ -13,6 +13,7 @@ class TrainingPathRepository extends BaseRepository {
       include: [
         {
           model: models.Course,
+          include: [{ all: true, nested: false }],
         },
       ],
     });

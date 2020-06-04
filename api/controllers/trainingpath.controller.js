@@ -7,61 +7,115 @@ class TrainingPathController {
   }
 
   async getTrainingPaths(req, res) {
-    let trainingpaths = await this._trainingpathService.getAllWithCourse();
-    trainingpaths = trainingpaths.map((trainingpath) =>
-      mapper(TrainingPathDto, trainingpath)
-    );
-    return res.send({
-      payload: trainingpaths,
-    });
+    try {
+      let trainingpaths = await this._trainingpathService.getAllWithCourse();
+      trainingpaths = trainingpaths.map((trainingpath) =>
+        mapper(TrainingPathDto, trainingpath)
+      );
+      return res.send({
+        payload: trainingpaths,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async getTrainingPath(req, res) {
-    const { id } = req.params;
-    let trainingpath = await this._trainingpathService.getWithCourse(id);
-    if (!trainingpath) {
-      return res.status(404).send();
+    try {
+      const { id } = req.params;
+      let trainingpath = await this._trainingpathService.getWithCourse(id);
+      if (!trainingpath) {
+        return res.status(404).send();
+      }
+      trainingpath = mapper(TrainingPathDto, trainingpath);
+      return res.send({
+        payload: trainingpath,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
     }
-    trainingpath = mapper(TrainingPathDto, trainingpath);
-    return res.send({
-      payload: trainingpath,
-    });
   }
 
   async getUserCourses(req, res) {
-    const { userId } = req.params;
-    let trainingpath = await this._trainingpathService.getUserCourses(userId);
-    if (!trainingpath) {
-      return res.status(404).send();
+    try {
+      const { userId } = req.params;
+      let trainingpath = await this._trainingpathService.getUserCourses(userId);
+      if (!trainingpath) {
+        return res.status(404).send();
+      }
+      trainingpath = mapper(TrainingPathDto, trainingpath);
+      return res.send({
+        payload: trainingpath,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
     }
-    trainingpath = mapper(TrainingPathDto, trainingpath);
-    return res.send({
-      payload: trainingpath,
-    });
   }
 
   async createTrainingPath(req, res) {
-    const { body } = req;
-    const createdTrainingPath = await this._trainingpathService.create(body);
-    const trainingpath = mapper(TrainingPathDto, createdTrainingPath);
-    return res.status(201).send({
-      payload: trainingpath,
-    });
+    try {
+      const { coursesArr, userId } = req.body;
+
+      coursesArr.forEach(async (courseId) => {
+        let body = { courseId: courseId, userId: userId, isActive: true };
+        await this._trainingpathService.create(body);
+      });
+      let trainingpath = await this._trainingpathService.getUserCourses(userId);
+      if (!trainingpath) {
+        return res.status(404).send();
+      }
+      trainingpath = mapper(TrainingPathDto, trainingpath);
+      return res.send({
+        payload: trainingpath,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async updateTrainingPath(req, res) {
-    const { body } = req;
-    const { id } = req.params;
+    try {
+      const { body } = req;
+      const { id } = req.params;
 
-    await this._trainingpathService.update(id, body);
-    return res.status(204).send();
+      await this._trainingpathService.update(id, body);
+      return res.status(204).send();
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async deleteTrainingPath(req, res) {
-    const { id } = req.params;
+    try {
+      const { coursesArr, userId } = req.body;
 
-    await this._trainingpathService.delete(id);
-    return res.status(204).send();
+      coursesArr.forEach(async (item) => {
+        let trainingPath = await this._trainingpathService.get(item);
+        let body = {
+          id: item,
+          courseId: trainingPath.courseId,
+          userId: userId,
+          isActive: false,
+        };
+        await this._trainingpathService.update(item, body);
+      });
+      let trainingpath = await this._trainingpathService.getUserCourses(userId);
+      if (!trainingpath) {
+        return res.status(404).send();
+      }
+      trainingpath = mapper(TrainingPathDto, trainingpath);
+      return res.send({
+        payload: trainingpath,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 }
 

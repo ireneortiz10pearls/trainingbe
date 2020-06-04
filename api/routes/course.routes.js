@@ -25,6 +25,11 @@ module.exports = function ({ CourseController }) {
     auth,
     CourseController.getAllByKeyWordAndCategory.bind(CourseController)
   );
+  router.get(
+    '/available/:userId',
+    auth,
+    CourseController.getAvailableCourses.bind(CourseController)
+  );
   router.post(
     '/',
     [auth, [courseValidationRules(), validate]],

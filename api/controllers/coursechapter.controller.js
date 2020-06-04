@@ -8,42 +8,59 @@ class CourseChapterController {
   }
 
   async getCourseChapters(req, res) {
-    let courseChapters = await this._courseChapterService.getAll();
+    try {
+      let courseChapters = await this._courseChapterService.getAll();
 
-    courseChapters = courseChapters.map((courseChapter) =>
-      mapper(CourseChapterDto, courseChapter)
-    );
-    return res.send({
-      payload: courseChapters,
-    });
+      courseChapters = courseChapters.map((courseChapter) =>
+        mapper(CourseChapterDto, courseChapter)
+      );
+      return res.send({
+        payload: courseChapters,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async getCourseChapter(req, res) {
-    const { id } = req.params;
-    let courseChapter = await this._courseChapterService.get(id);
-    if (!courseChapter) {
-      return res.status(404).send();
+    try {
+      const { id } = req.params;
+      let courseChapter = await this._courseChapterService.get(id);
+      if (!courseChapter) {
+        return res.status(404).send();
+      }
+      courseChapter = mapper(CourseChapterDto, courseChapter);
+      return res.send({
+        payload: courseChapter,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
     }
-    courseChapter = mapper(CourseChapterDto, courseChapter);
-    return res.send({
-      payload: courseChapter,
-    });
   }
 
   async getChaptersByCourseId(req, res) {
-    const { id } = req.params;
-    let courseChapters = await this._courseChapterService.getChaptersByCourseId(
-      id
-    );
+    try {
+      const { id } = req.params;
+      let courseChapters = await this._courseChapterService.getChaptersByCourseId(
+        id
+      );
 
-    courseChapters.sort((a, b) => (a.order > b.order ? 1 : -1));
+      if (courseChapters) {
+        courseChapters.sort((a, b) => (a.order > b.order ? 1 : -1));
 
-    courseChapters = courseChapters.map((courseChapter) =>
-      mapper(CourseChapterDto, courseChapter)
-    );
-    return res.send({
-      payload: courseChapters,
-    });
+        courseChapters = courseChapters.map((courseChapter) =>
+          mapper(CourseChapterDto, courseChapter)
+        );
+      }
+      return res.send({
+        payload: courseChapters,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async createCourseChapter(req, res) {
@@ -73,18 +90,28 @@ class CourseChapterController {
   }
 
   async updateCourseChapter(req, res) {
-    const { body } = req;
-    const { id } = req.params;
+    try {
+      const { body } = req;
+      const { id } = req.params;
 
-    await this._courseChapterService.update(id, body);
-    return res.status(204).send();
+      await this._courseChapterService.update(id, body);
+      return res.status(204).send();
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async deleteCourseChapter(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    await this._courseChapterService.delete(id);
-    return res.status(204).send();
+      await this._courseChapterService.delete(id);
+      return res.status(204).send();
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 }
 

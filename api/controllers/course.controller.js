@@ -2,91 +2,152 @@ const mapper = require('automapper-js');
 const { CourseDto } = require('../dtos');
 
 class CourseController {
-  constructor({ CourseService }) {
+  constructor({ CourseService, TrainingPathService }) {
     this._courseService = CourseService;
+    this._trainingpathService = TrainingPathService;
   }
 
   async getCourses(req, res) {
-    let courses = await this._courseService.getAllWithCategory();
-    courses = courses.map((course) => mapper(CourseDto, course));
-    return res.send({
-      payload: courses,
-    });
+    try {
+      let courses = await this._courseService.getAllWithCategory();
+      courses = courses.map((course) => mapper(CourseDto, course));
+      return res.send({
+        payload: courses,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
+  }
+
+  async getAvailableCourses(req, res) {
+    try {
+      const { userId } = req.params;
+      let courses = await this._courseService.getAll();
+      let userCourses = await this._trainingpathService.getUserCourses(userId);
+
+      userCourses.forEach((userCourse) => {
+        courses = courses.filter((course) => course.id !== userCourse.courseId);
+      });
+
+      courses = courses.map((course) => mapper(CourseDto, course));
+      return res.send({
+        payload: courses,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async getCourse(req, res) {
-    const { id } = req.params;
-    let course = await this._courseService.getWithCategory(id);
-    if (!course) {
-      return res.status(404).send();
+    try {
+      const { id } = req.params;
+      let course = await this._courseService.getWithCategory(id);
+      if (!course) {
+        return res.status(404).send();
+      }
+      course = mapper(CourseDto, course);
+      return res.send({
+        payload: course,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
     }
-    course = mapper(CourseDto, course);
-    return res.send({
-      payload: course,
-    });
   }
 
   async getAllByCategory(req, res) {
-    const { categoryid } = req.params;
-    let course = await this._courseService.getAllByCategory(categoryid);
-    if (!course) {
-      return res.status(404).send();
+    try {
+      const { categoryid } = req.params;
+      let course = await this._courseService.getAllByCategory(categoryid);
+      if (!course) {
+        return res.status(404).send();
+      }
+      course = mapper(CourseDto, course);
+      return res.send({
+        payload: course,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
     }
-    course = mapper(CourseDto, course);
-    return res.send({
-      payload: course,
-    });
   }
 
   async getAllByKeyWord(req, res) {
-    const { keyword } = req.params;
-    let course = await this._courseService.getAllByKeyWord(keyword);
-    if (!course) {
-      return res.status(404).send();
+    try {
+      const { keyword } = req.params;
+      let course = await this._courseService.getAllByKeyWord(keyword);
+      if (!course) {
+        return res.status(404).send();
+      }
+      course = mapper(CourseDto, course);
+      return res.send({
+        payload: course,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
     }
-    course = mapper(CourseDto, course);
-    return res.send({
-      payload: course,
-    });
   }
 
   async getAllByKeyWordAndCategory(req, res) {
-    const { categoryid, keyword } = req.params;
-    let course = await this._courseService.getAllByKeyWordAndCategory(
-      categoryid,
-      keyword
-    );
-    if (!course) {
-      return res.status(404).send();
+    try {
+      const { categoryid, keyword } = req.params;
+      let course = await this._courseService.getAllByKeyWordAndCategory(
+        categoryid,
+        keyword
+      );
+      if (!course) {
+        return res.status(404).send();
+      }
+      course = mapper(CourseDto, course);
+      return res.send({
+        payload: course,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
     }
-    course = mapper(CourseDto, course);
-    return res.send({
-      payload: course,
-    });
   }
 
   async createCourse(req, res) {
-    const { body } = req;
-    const createdCourse = await this._courseService.create(body);
-    const course = mapper(CourseDto, createdCourse);
-    return res.status(201).send({
-      payload: course,
-    });
+    try {
+      const { body } = req;
+      const createdCourse = await this._courseService.create(body);
+      const course = mapper(CourseDto, createdCourse);
+      return res.status(201).send({
+        payload: course,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async updateCourse(req, res) {
-    const { body } = req;
-    const { id } = req.params;
+    try {
+      const { body } = req;
+      const { id } = req.params;
 
-    await this._courseService.update(id, body);
-    return res.status(204).send();
+      await this._courseService.update(id, body);
+      return res.status(204).send();
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 
   async deleteCourse(req, res) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    await this._courseService.delete(id);
-    return res.status(204).send();
+      await this._courseService.delete(id);
+      return res.status(204).send();
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
   }
 }
 

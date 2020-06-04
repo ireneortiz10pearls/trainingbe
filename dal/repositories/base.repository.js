@@ -9,6 +9,7 @@ class BaseRepository {
     return this._db[this.entity].findAll({
       where: { isActive: true },
       order: [['id', 'ASC']],
+      include: [{ all: true, nested: false }],
     });
   }
 
@@ -47,7 +48,7 @@ class BaseRepository {
     delete entity.createdAt;
     delete entity.updatedAt;
     return this._db[this.entity].update(entity, {
-      where: { id, isActive: true },
+      where: { id },
     });
   }
 
