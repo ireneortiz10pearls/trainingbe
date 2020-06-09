@@ -6,6 +6,9 @@ class CourseChapterDto {
   order = 0;
   percentage = 0.0;
   isActive = false;
+  isDone = false;
+  dateFinished = '';
+  Course = {};
 }
 
 module.exports = CourseChapterDto;

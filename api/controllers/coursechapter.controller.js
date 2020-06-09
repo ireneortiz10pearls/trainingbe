@@ -53,6 +53,8 @@ class CourseChapterController {
         courseChapters = courseChapters.map((courseChapter) =>
           mapper(CourseChapterDto, courseChapter)
         );
+      } else {
+        return res.status(404).send();
       }
       return res.send({
         payload: courseChapters,

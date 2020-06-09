@@ -13,6 +13,13 @@ class TrainingPathRepository extends BaseRepository {
       include: [
         {
           model: models.Course,
+          include: {
+            model: models.Category,
+          },
+        },
+        {
+          model: models.TrainingPathStatus,
+          as: 'TrainingPathStatuses',
           include: [{ all: true, nested: false }],
         },
       ],

@@ -12,7 +12,8 @@ class CourseChapterBusiness extends BaseBusiness {
       courseId
     );
     if (chapters.length <= 0) return null;
-    return mapper(CourseChapter, chapters);
+    // return mapper(CourseChapter, chapters);
+    return chapters;
   }
 }
 

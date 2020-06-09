@@ -26,9 +26,13 @@ class CourseController {
       let courses = await this._courseService.getAll();
       let userCourses = await this._trainingpathService.getUserCourses(userId);
 
-      userCourses.forEach((userCourse) => {
-        courses = courses.filter((course) => course.id !== userCourse.courseId);
-      });
+      if (userCourses) {
+        userCourses.forEach((userCourse) => {
+          courses = courses.filter(
+            (course) => course.id !== userCourse.courseId
+          );
+        });
+      }
 
       courses = courses.map((course) => mapper(CourseDto, course));
       return res.send({

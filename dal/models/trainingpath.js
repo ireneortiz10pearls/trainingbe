@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         name: 'courseId',
       },
     });
+    TrainingPath.belongsTo(models.User, {
+      foreignKey: {
+        name: 'userId',
+      },
+    });
     TrainingPath.hasMany(models.TrainingPathStatus, {
       foreignKey: 'trainingPathId',
       as: 'TrainingPathStatuses',

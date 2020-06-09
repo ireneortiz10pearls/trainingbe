@@ -6,20 +6,49 @@ module.exports = function ({ TrainingPathController }) {
 
   router.get(
     '/',
+    auth,
     TrainingPathController.getTrainingPaths.bind(TrainingPathController)
   );
   router.get(
     '/:id',
+    auth,
     TrainingPathController.getTrainingPath.bind(TrainingPathController)
   );
   router.get(
     '/user/:userId',
+    auth,
     TrainingPathController.getUserCourses.bind(TrainingPathController)
   );
+  router.get(
+    '/userchapter/:trainingPathId/:courseId/:userId',
+    auth,
+    TrainingPathController.getUserChaptersByCourseId.bind(
+      TrainingPathController
+    )
+  );
+
+  router.put(
+    '/trainingpathstatus/:chapterId/:trainingPathId',
+    auth,
+    TrainingPathController.updateTrainingPathStatus.bind(TrainingPathController)
+  );
+
   router.post(
     '/',
     auth,
     TrainingPathController.createTrainingPath.bind(TrainingPathController)
+  );
+  router.post(
+    '/trainingpathstatus/',
+    auth,
+    TrainingPathController.createTrainingPathStatus.bind(TrainingPathController)
+  );
+  router.post(
+    '/trainingpathstatus/batch',
+    auth,
+    TrainingPathController.createBatchTrainingPathStatus.bind(
+      TrainingPathController
+    )
   );
   router.put(
     '/',

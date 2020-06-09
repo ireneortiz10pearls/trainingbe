@@ -6,6 +6,9 @@ class CourseChapter {
   length = 0;
   percentage = 0.0;
   isActive = false;
+  isDone = false;
+  Course = {};
+  TrainingPathStatuses = [];
 }
 
 module.exports = CourseChapter;
