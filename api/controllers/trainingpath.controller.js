@@ -3,6 +3,7 @@ const {
   TrainingPathDto,
   CourseChapterDto,
   TrainingPathStatusDto,
+  MostEnrolledUsersDto,
 } = require('../dtos');
 
 class TrainingPathController {
@@ -48,6 +49,36 @@ class TrainingPathController {
     }
   }
 
+  async getMostEnrolledCourses(req, res) {
+    try {
+      let trainingpaths = await this._trainingpathService.getMostEnrolledCourses();
+      return res.send({
+        payload: trainingpaths,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
+  }
+
+  async getMostEnrolledUsers(req, res) {
+    try {
+      let result = await this._trainingpathService.getMostEnrolledUsers();
+
+      let users = result.map((user) => {
+        let fullName = user['User.firstName'] + ' ' + user['User.lastName'];
+        let userCount = user.userCount;
+        return { userCount, fullName };
+      });
+
+      return res.send({
+        payload: users,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
+  }
   async getUserCourses(req, res) {
     try {
       const { userId } = req.params;

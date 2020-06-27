@@ -6,6 +6,7 @@ class Course {
   tags = null;
   description = null;
   isActive = false;
+  createdAt = null;
   Category = {};
 }
 

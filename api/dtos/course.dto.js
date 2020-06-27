@@ -6,6 +6,7 @@ class CourseDto {
   tags = '';
   description = '';
   isActive = false;
+  createdAt = null;
   Category = {};
 }
 

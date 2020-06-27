@@ -30,6 +30,19 @@ class CourseRepository extends BaseRepository {
     });
   }
 
+  getLastCreatedCourses() {
+    return this._db[this.entity].findAll({
+      limit: 8,
+      where: { isActive: true },
+      order: [['createdAt', 'DESC']],
+      include: [
+        {
+          model: models.Category,
+        },
+      ],
+    });
+  }
+
   getAllByCategory(categoryId) {
     return this._db[this.entity].findAll({
       where: { isActive: true },

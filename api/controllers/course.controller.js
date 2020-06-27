@@ -95,6 +95,22 @@ class CourseController {
     }
   }
 
+  async getLastCreatedCourses(req, res) {
+    try {
+      let course = await this._courseService.getLastCreatedCourses();
+      if (!course) {
+        return res.status(404).send();
+      }
+      course = mapper(CourseDto, course);
+      return res.send({
+        payload: course,
+      });
+    } catch (err) {
+      console.log(err.message);
+      return res.status(500).send('Server Error.');
+    }
+  }
+
   async getAllByKeyWordAndCategory(req, res) {
     try {
       const { categoryid, keyword } = req.params;

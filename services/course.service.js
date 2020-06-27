@@ -23,6 +23,10 @@ class CourseService extends BaseService {
     const course = await this._entityBusiness.getAllByKeyWord(keyWord);
     return course;
   }
+  async getLastCreatedCourses() {
+    const course = await this._entityBusiness.getLastCreatedCourses();
+    return course;
+  }
 
   async getAllByKeyWordAndCategory(categoryId, keyWord) {
     const course = await this._entityBusiness.getAllByKeyWordAndCategory(

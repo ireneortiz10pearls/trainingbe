@@ -5,6 +5,17 @@ module.exports = function ({ TrainingPathController }) {
   const router = Router();
 
   router.get(
+    '/mostenrolled/courses',
+    auth,
+    TrainingPathController.getMostEnrolledCourses.bind(TrainingPathController)
+  );
+  router.get(
+    '/mostenrolled/users',
+    auth,
+    TrainingPathController.getMostEnrolledUsers.bind(TrainingPathController)
+  );
+
+  router.get(
     '/',
     auth,
     TrainingPathController.getTrainingPaths.bind(TrainingPathController)

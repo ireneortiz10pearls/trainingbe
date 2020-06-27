@@ -7,7 +7,11 @@ const auth = require('../middleware/auth/auth.js');
 
 module.exports = function ({ CourseController }) {
   const router = Router();
-
+  router.get(
+    '/lastcreated/',
+    auth,
+    CourseController.getLastCreatedCourses.bind(CourseController)
+  );
   router.get('/', auth, CourseController.getCourses.bind(CourseController));
   router.get('/:id', auth, CourseController.getCourse.bind(CourseController));
   router.get(
@@ -30,6 +34,7 @@ module.exports = function ({ CourseController }) {
     auth,
     CourseController.getAvailableCourses.bind(CourseController)
   );
+
   router.post(
     '/',
     [auth, [courseValidationRules(), validate]],

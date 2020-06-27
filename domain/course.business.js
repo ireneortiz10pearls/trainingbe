@@ -31,6 +31,12 @@ class CourseBusiness extends BaseBusiness {
     return mapper(Course, course);
   }
 
+  async getLastCreatedCourses() {
+    const courses = await this._entityRepository.getLastCreatedCourses();
+    if (!courses) return null;
+    return mapper(Course, courses);
+  }
+
   async getAllByKeyWordAndCategory(categoryId, keyWord) {
     const course = await this._entityRepository.getAllByKeyWordAndCategory(
       categoryId,

@@ -4,6 +4,7 @@ class TrainingPathDto {
   courseId = 0;
   isActive = false;
   percentage = 0;
+  courseCount = 0;
   Course = {};
 }
 
