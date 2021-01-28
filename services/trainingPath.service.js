@@ -9,6 +9,14 @@ class TrainingPathService extends BaseService {
     return trainingPath;
   }
 
+  async getUserInactiveCourse(userId, courseId) {
+    const trainingPath = await this._entityBusiness.getUserInactiveCourse(
+      userId,
+      courseId
+    );
+    return trainingPath;
+  }
+
   async getMostEnrolledCourses() {
     const courses = await this._entityBusiness.getMostEnrolledCourses();
     return courses;

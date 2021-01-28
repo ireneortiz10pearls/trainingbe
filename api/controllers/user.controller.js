@@ -5,18 +5,18 @@ require('dotenv').config();
 
 const sgMail = require('@sendgrid/mail');
 
-const { JWT_SECRET, SENDGRID_API_KEY } = process.env;
+const { SENDGRID_API_KEY } = process.env;
 sgMail.setApiKey(SENDGRID_API_KEY);
 
 const { UserDto } = require('../dtos');
 
-async function sendMail(to, password, userName) {
+async function sendMail(to, userName, link) {
   const msg = {
     to: to,
     from: 'irene.ortiz@gmail.com',
     subject: 'Training Tracking Account Creation',
-    text: `Hello ${userName}: An account on 10 Pearls Training Tracking System has been created for you.  Please enter this link and enter with this password: ${password}.  You should need to change passwor at first time.`,
-    html: `Hello <strong>${userName}</strong>: An account on 10 Pearls Training Tracking System has been created for you.  Please enter this link and enter with this password: <strong>${password}</strong>.  <strong>You should need to change password at first time.</strong>`,
+    text: `Hello ${userName}: An account on 10 Pearls Training Tracking System has been created for you.  Please enter this link ${link} to set your password.  You should need to change passwor at first time.`,
+    html: `Hello <strong>${userName}</strong>: An account on 10 Pearls Training Tracking System has been created for you.  Please enter this link ${link} to set your password.  <strong>You should need to change password at first time.</strong>`,
   };
   await sgMail.send(msg);
 }
@@ -80,7 +80,8 @@ class UserController {
       });
 
       const user = mapper(UserDto, createdUser);
-      await sendMail(email, password, createdUser.firstName);
+      const link = `${req.protocol}://${req.header('x-forwarded-host')}/changepassword/${createdUser.id}`
+      await sendMail(email, createdUser.firstName, link);
       return res.status(201).send({
         payload: user,
       });
@@ -111,6 +112,38 @@ class UserController {
 
     await this._userService.delete(id);
     return res.status(204).send();
+  }
+  
+  async forgotPassword(req, res) {
+    const { email } = req.params;
+
+    try {
+      // Validates user exists by email
+      let userFound = await this._userService.getUsersByEmail(email);
+
+      if (!userFound) {
+        return res.status(400).json({
+          errors: [
+            {
+              msg:
+                'The email entered does not exist in our records, please validate and try again.',
+            },
+          ],
+        });
+      }
+      const link = `${req.protocol}://${req.header('x-forwarded-host')}/changepassword/${userFound[0].id}`
+      const msg = {
+        to: email,
+        from: 'irene.ortiz@gmail.com',
+        subject: 'Training Tracking Password Reset',
+        text: `Hello ${userFound[0].firstName}: Please enter this link ${link} to reset your password.`,
+        html: `Hello <strong>${userFound[0].firstName}</strong>: Please enter this link ${link} to reset your password.`,
+      };
+      await sgMail.send(msg);
+    } catch (err) {
+      console.error(err.message);
+      return res.status(500).send('Server error');
+    }
   }
 }
 

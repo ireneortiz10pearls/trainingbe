@@ -13,6 +13,15 @@ class TrainingPathBusiness extends BaseBusiness {
     return mapper(TrainingPath, trainingPath);
   }
 
+  async getUserInactiveCourse(userId, courseId) {
+    const trainingPath = await this._entityRepository.getUserInactiveCourse(
+      userId,
+      courseId
+    );
+    if (trainingPath.length <= 0) return null;
+    return mapper(TrainingPath, trainingPath);
+  }
+
   async getMostEnrolledCourses() {
     const courses = await this._entityRepository.getMostEnrolledCourses();
     if (courses.length <= 0) return null;

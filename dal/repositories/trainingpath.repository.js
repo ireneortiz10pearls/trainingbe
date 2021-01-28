@@ -26,6 +26,25 @@ class TrainingPathRepository extends BaseRepository {
     });
   }
 
+  getUserInactiveCourse(userId, courseId) {
+    return this._db[this.entity].findAll({
+      where: { isActive: false, userId: userId, courseId: courseId },
+      include: [
+        {
+          model: models.Course,
+          include: {
+            model: models.Category,
+          },
+        },
+        {
+          model: models.TrainingPathStatus,
+          as: 'TrainingPathStatuses',
+          include: [{ all: true, nested: false }],
+        },
+      ],
+    });
+  }
+
   getMostEnrolledCourses() {
     return this._db[this.entity].findAll({
       limit: 8,

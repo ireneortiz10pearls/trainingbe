@@ -16,8 +16,16 @@ module.exports = function ({ UserController }) {
     [auth, [userValidationRules(), validate]],
     UserController.createUser.bind(UserController)
   );
-  router.put('/:id', UserController.updateUser.bind(UserController));
+  router.put(
+    '/:id',
+    [userValidationRules(), validate],
+    UserController.updateUser.bind(UserController)
+   );
   router.delete('/:id', UserController.deleteUser.bind(UserController));
+  router.get(
+    '/forgotpassword/:email',
+    UserController.forgotPassword.bind(UserController)
+  );
 
   return router;
 };

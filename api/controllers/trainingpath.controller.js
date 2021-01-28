@@ -3,7 +3,6 @@ const {
   TrainingPathDto,
   CourseChapterDto,
   TrainingPathStatusDto,
-  MostEnrolledUsersDto,
 } = require('../dtos');
 
 class TrainingPathController {
@@ -79,6 +78,7 @@ class TrainingPathController {
       return res.status(500).send('Server Error.');
     }
   }
+
   async getUserCourses(req, res) {
     try {
       const { userId } = req.params;
@@ -94,13 +94,12 @@ class TrainingPathController {
             trainingpath.courseId
           );
           let value = 0.0;
+          let lastFinishedCourseDate = null;
           if (courseChapters) {
             let total = await courseChapters.reduce(
-              function (acumulator, nextValue) {
-                return {
-                  length: acumulator.length + nextValue.length,
-                };
-              },
+              (acumulator, nextValue) => ({
+                length: acumulator.length + nextValue.length,
+              }),
               { length: 0 }
             );
 
@@ -117,6 +116,10 @@ class TrainingPathController {
 
               if (isDone.length > 0) {
                 lengthCompleted = lengthCompleted + courseChapter.length;
+                lastFinishedCourseDate =
+                  isDone[0].dateFinished > lastFinishedCourseDate
+                    ? isDone[0].dateFinished
+                    : lastFinishedCourseDate;
               }
             });
             trainingpath = mapper(TrainingPathDto, trainingpath);
@@ -124,6 +127,7 @@ class TrainingPathController {
           }
           value = value.toFixed(2);
           trainingpath.percentage = value;
+          trainingpath.lastFinishedCourseDate = lastFinishedCourseDate;
           return trainingpath;
         })
       );
@@ -190,7 +194,24 @@ class TrainingPathController {
 
       coursesArr.forEach(async (courseId) => {
         let body = { courseId: courseId, userId: userId, isActive: true };
-        await this._trainingpathService.create(body);
+        let courseInactive = await this._trainingpathService.getUserInactiveCourse(
+          userId,
+          courseId
+        );
+        if (courseInactive) {
+          let courseActive = {
+            id: courseInactive[0].id,
+            courseId: courseId,
+            userId: userId,
+            isActive: true,
+          };
+          await this._trainingpathService.update(
+            courseInactive[0].id,
+            courseActive
+          );
+        } else {
+          await this._trainingpathService.create(body);
+        }
       });
 
       return res.send({

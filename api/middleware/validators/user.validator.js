@@ -8,6 +8,7 @@ const userValidationRules = () => {
     body('email').isEmail(),
     // password must be at least 5 chars long
     body('password').isLength({ min: 6 }),
+    body('password').isLength({ max: 30 }),
   ];
 };
 
